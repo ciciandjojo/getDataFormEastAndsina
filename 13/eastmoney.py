@@ -1,7 +1,5 @@
 from urllib import request,parse
 import urllib
-import http.cookiejar
-from bs4 import BeautifulSoup
 import requests
 import json
 
@@ -23,6 +21,8 @@ def eastmoney_text_get():
 
     data = json.loads(html)
 
+    print(data['IsSuccess'])
+
     if data['IsSuccess']:
         # 循环输出所有的Data元素
         for i in range(0, len(data['Data'])):
@@ -41,3 +41,4 @@ def eastmoney_text_get():
                 NoticeContent += ' '.join(item.split()) + ' '
 
 
+eastmoney_text_get()
