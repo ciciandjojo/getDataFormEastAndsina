@@ -3,16 +3,11 @@
     @Time:2019/3/4 9:47
     @Author: John Ma
 """
-from urllib import request, parse
-import urllib
 import requests
 import json
-# coding:UTF-8
 import time
-import datetime
 import sys
 import io
-import numpy
 
 # 时间戳转化为时间
 def timestampToTime(now):  # 时间戳
@@ -22,7 +17,7 @@ def timestampToTime(now):  # 时间戳
     # 格式化时间
     format_time = time.strftime("%Y-%m-%d %H:%M:%S", tl)
 
-# 单次去获取数据
+# 单次去获取数据    因为api的限制每次只能获取100条数据
 def wallstreet_text_get(timestamp):
     textAndTime = []
     block = ['global', 'blockchain', 'a_stock', 'us_stock', 'forex', 'commodity']
