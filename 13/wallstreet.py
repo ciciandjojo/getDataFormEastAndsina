@@ -9,6 +9,15 @@ import time
 import sys
 import io
 
+# 时间转化为时间戳
+def timeToTimestamp(format_time):
+    # 格式化时间
+    format_time = format_time
+    # 时间
+    ts = time.strptime(format_time, "%Y-%m-%d %H:%M:%S")
+    # 格式化时间转时间戳
+    return time.mktime(ts)
+
 # 时间戳转化为时间
 def timestampToTime(now):  # 时间戳
     now = now
@@ -16,6 +25,7 @@ def timestampToTime(now):  # 时间戳
     tl = time.localtime(now)
     # 格式化时间
     format_time = time.strftime("%Y-%m-%d %H:%M:%S", tl)
+    return format_time
 
 # 单次去获取数据    因为api的限制每次只能获取100条数据
 def wallstreet_text_get(timestamp):
@@ -37,7 +47,7 @@ def wallstreet_text_get(timestamp):
     else:
         for item in wallstreet_all_message['data']['items']:
             content_text = item['content_text']
-            display_time = item['display_time']
+            display_time = timestampToTime(item['display_time'])
             textAndTime.append(content_text)
             textAndTime.append(display_time)
             # print(display_time)
@@ -45,10 +55,13 @@ def wallstreet_text_get(timestamp):
 
 
 # 定时去爬取数据
-def timer(n):
+def timer():
     while True:
-        print(len(get_one_day()))
-        time.sleep(n)
+        get_one_day0 = get_one_day()
+        if get_one_day0["all_message"]:
+            return 1
+        else:
+            return 0
 
 # 获取一天的所有信息   成功返回当天的      失败返回空
 def get_one_day():
@@ -70,26 +83,36 @@ def get_one_day():
     time.localtime()
     textAndTime_all = wallstreet_text_get(timestamp)
     if textAndTime_all:
-        intoftext = textAndTime_all[len(textAndTime_all) - 1]
-        while (int(intoftext) > int(time.mktime(ts))):
+        intoftext = int(timeToTimestamp(textAndTime_all[len(textAndTime_all) - 1]))
+        while (intoftext > int(time.mktime(ts))):
+
             textAndTime_all.extend(wallstreet_text_get(intoftext))
-            intoftext = textAndTime_all[len(textAndTime_all) - 1]
-            print(intoftext)
+            intoftext = int(timeToTimestamp(textAndTime_all[len(textAndTime_all) - 1]))
 
         textAndTime_all_2list = [textAndTime_all[i:i+2] for i in range(0,len(textAndTime_all), 2)]
 
         for pre in textAndTime_all_2list:
-            if (int(pre[1]) > int(time.mktime(ts))):
+            pre_timestamp = timeToTimestamp(pre[1])
+            if (int(pre_timestamp) > int(time.mktime(ts))):
                 textAndTime_oneDay.extend(pre)
         textAndTime_oneDay_2list = [textAndTime_oneDay[i:i + 2] for i in range(0, len(textAndTime_oneDay), 2)]
-        print(textAndTime_oneDay_2list)
-        return textAndTime_oneDay_2list
+
+        all_message_json = {}
+        all_message_json["all_message"] = textAndTime_oneDay_2list
+        # print(all_massage_json)
+        return all_message_json
     else:
-        return textAndTime_all
+        all_message_json = {}
+        all_message_json["all_message"] = textAndTime_all
+        print(all_message_json)
+        return all_message_json
 
 
 if __name__ == "__main__":
     # 5s
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')  # 改变标准输出的默认编码
-    timer(1)
+    # sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')  # 改变标准输出的默认编码
 
+    while True:
+        timer0 = timer()
+        print('timer0: '+str(timer0))
+        time.sleep(2)
