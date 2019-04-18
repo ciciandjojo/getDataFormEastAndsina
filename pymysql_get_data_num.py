@@ -48,5 +48,6 @@ if __name__ == "__main__":
         dtypedict = map_types(df)
         # 通过dtype设置类型 为dict格式{“col_name”:type}
         print('开始将数据'+str(data_name)+'导入数据库.............')
+
         df.to_sql(name=str(data_name), con=con, if_exists='replace', index=False, dtype=dtypedict)
         print('数据'+str(data_name)+'导入完毕......................')

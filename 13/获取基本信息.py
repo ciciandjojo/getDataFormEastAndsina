@@ -28,12 +28,14 @@ def eastmoney_text_get():
         for i in soupContent.select('.stock-bets h1 a'):
             stock_Name = i.text.replace("\n", "").replace("      ", "")
         now_price = soupContent_temp
+        isOpenSell = soupContent.select('.stock-bets h1 span')[1].string
         pre_up = soupContent.select('.stock-bets div')[0].select('span')[0].string
         pre_up_precent = soupContent.select('.stock-bets div')[0].select('span')[1].string
         stockDict['stock_Name'] = stock_Name
         stockDict['now_price'] = now_price
         stockDict['pre_up'] = pre_up
         stockDict['pre_up_precent'] = pre_up_precent
+        stockDict['isOpenSell'] = isOpenSell.split(' ')[0]
     print(now_price, pre_up, pre_up_precent)
 
     if soupContent.select('.bets-content'):

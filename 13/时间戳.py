@@ -27,6 +27,7 @@ def timestampToTime(now):
     format_time = time.strftime("%Y-%m-%d %H:%M:%S", tl)
     print(format_time)
 
+
 if __name__ == "__main__":
 
     format_time = time.strftime("%Y-%m-%d", time.localtime())
