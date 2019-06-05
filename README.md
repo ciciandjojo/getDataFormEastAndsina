@@ -24,3 +24,5 @@
 （2）爬取难点：有的需要代理、都需要headers、有的需要Referer  
 （3）基本都会存在api,如果没有就只能网页解析数据,太复杂成本太高就用selenium（用到这个也就是无奈）  
 
+## pymysql_get_data_num.py
+（1）将数据从csv导入数据库
